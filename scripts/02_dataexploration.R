@@ -27,7 +27,9 @@ ggplot(data = cpue_gr,
        aes(x = as.factor(Year))) +
   geom_boxplot(aes(y = Effort_hm)) +
   labs(x = "Year",
-       y = "Effort (hm)")
+       y = "Effort (hm)") +
+  theme(
+    axis.text.x = element_text(angle = 90, size = 8))
 
 # weight
 ggplot(data = cpue_gr, 
@@ -35,13 +37,17 @@ ggplot(data = cpue_gr,
   geom_boxplot(aes(y = Weight_full)) +
   labs(x = "Year",
        y = "Full Weight (kg)") +
-  coord_trans(y = "log10")
+  coord_trans(y = "log10") +
+  theme(
+    axis.text.x = element_text(angle = 90, size = 8))
 ggplot(data = cpue_gr, 
        aes(x = as.factor(Year))) +
   geom_boxplot(aes(y = Weight_muscle)) +
   labs(x = "Year",
        y = "Muscle Weight (kg)") +
-  coord_trans(y = "log10")
+  coord_trans(y = "log10") +
+  theme(
+    axis.text.x = element_text(angle = 90, size = 8))
 
 
 # annual summary statistics
@@ -97,25 +103,10 @@ sizes <- read_csv("data/scallop-sizes.csv")
 
 ## exploratory plots
 
-# stacked barchart of size cateogries through time
+# prepare the data
 sizes.toplot <- sizes
 sizes.toplot$Year <- as.character(sizes$Year)
 sizes.toplot$Length <- factor(sizes$Length, levels = c(1:120, NA))
-#sizes.toplot$Length[which(sizes$Length %in% 1:9)] <- paste0("0", sizes.toplot$Length[which(sizes$Length %in% 1:10)])
-p <- ggplot(sizes.toplot) +
-  geom_bar(aes(x = Year, 
-               y = nlengthm2, 
-               fill = Length),
-           position = "stack", 
-           stat = "identity",
-           width = .6) +
-  labs(x = "", y = "Density at each length") +
-  facet_wrap(~Sector) +
-  scale_fill_manual(values = hex_codes1) +
-  theme(
-    legend.position = "none",
-        axis.text.x = element_text(angle = 90, size = 6))
-
 
 # print a continuous legend separately
 n1 <- 121                                        # Amount of default colors
@@ -131,6 +122,21 @@ p0 <- ggplot(sizes) +
         axis.text.x = element_text(angle = 90, size = 6))
 plotlegend <- cowplot::get_legend(p0)
 p0 <- ggpubr::as_ggplot(plotlegend)
+
+# stacked barchart of size categories through time
+p <- ggplot(sizes.toplot) +
+  geom_bar(aes(x = Year, 
+               y = nlengthm2, 
+               fill = Length),
+           position = "stack", 
+           stat = "identity",
+           width = .6) +
+  labs(x = "", y = "Density at each length") +
+  facet_wrap(~Sector) +
+  scale_fill_manual(values = hex_codes1) +
+  theme(
+    legend.position = "none",
+    axis.text.x = element_text(angle = 90, size = 6))
 
 # patchwork the plot and its legend together
 p0 / p + 
