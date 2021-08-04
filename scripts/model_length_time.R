@@ -103,3 +103,26 @@ ggsave("figures/meanlengths_lm_boxplot.png", width = 6.83, height = 5.03)
 #               method = "gam", col = "black") +
 #   theme(legend.position = "right") +
 #   labs(x = "", y = "Mean length")
+
+broom.mixed::tidy(m2)
+summary(m2)
+
+
+# Prepare model outputs to plot the slopes per sector, from the mixed models, 
+# to get an idea of how the sectors differ
+coefs <- coef(m2)$Sector %>% as.data.frame()
+coefs$sector <- rownames(coefs)
+coefs <- coefs[order(coefs$Year, decreasing = FALSE),]
+coefs$sector <- factor(coefs$sector, levels = coefs$sector)
+# plot
+quartz()
+ggplot(coefs) +
+  geom_segment(aes(x = Year, xend = 0, y = sector, yend = sector, col = Year),
+               lwd = .8)+
+  geom_point(aes(x = Year, y = sector, col = Year), size = 5) +
+  coord_cartesian(xlim = c(-0.006, 0.006)) +
+  geom_vline(aes(xintercept = 0), lty = 2) +
+  scale_color_distiller(palette = "Spectral", direction = 1) +
+  theme(legend.position = "right") +
+  labs(col = "Slope", y = "Sector", x = "Slope (Mean Length ~ Year)")
+ggsave("figures/meanlengths_lmm_slopespersector.png", width = 7, height = 7)
