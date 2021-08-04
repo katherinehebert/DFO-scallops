@@ -95,15 +95,6 @@ ggplot(meanlengths) +
                        " P =",signif(summary(m0)$coef[2,4], 5)))
 ggsave("figures/meanlengths_lm_boxplot.png", width = 6.83, height = 5.03)
 
-
-# plot with a GAM just out of curiosity
-# ggplot(meanlengths) +
-#   geom_line(aes(x = Year, y = mean_length, col = Sector)) +
-#   geom_smooth(aes(x = Year, y = mean_length), 
-#               method = "gam", col = "black") +
-#   theme(legend.position = "right") +
-#   labs(x = "", y = "Mean length")
-
 broom.mixed::tidy(m2)
 summary(m2)
 
@@ -122,7 +113,9 @@ ggplot(coefs) +
   geom_point(aes(x = Year, y = sector, col = Year), size = 5) +
   coord_cartesian(xlim = c(-0.006, 0.006)) +
   geom_vline(aes(xintercept = 0), lty = 2) +
-  scale_color_distiller(palette = "Spectral", direction = 1) +
+  scale_color_distiller(palette = "Spectral", 
+                        direction = 1, 
+                        limits = c(-0.0046,0.0046)) +
   theme(legend.position = "right") +
   labs(col = "Slope", y = "Sector", x = "Slope (Mean Length ~ Year)")
 ggsave("figures/meanlengths_lmm_slopespersector.png", width = 7, height = 7)
