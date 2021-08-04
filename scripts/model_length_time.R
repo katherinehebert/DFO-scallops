@@ -2,7 +2,6 @@
 
 # load packages
 library(Hmisc)
-library(mgcv)
 
 # read the prepared data
 sizes <- read_csv("data/scallop-sizes.csv")
