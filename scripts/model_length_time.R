@@ -1,4 +1,4 @@
-# hierarchical GAM to model length differences through time
+# Model length differences through time
 
 # load packages
 library(Hmisc)
