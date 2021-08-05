@@ -47,6 +47,9 @@ scallops_length@LFC <- df$Length
 scallops_length@Cat <- catch_matrix
 scallops_length@AvC <- avc_matrix
 scallops_length@Ind <- ra_matrix
+scallops_length@L95 <- 35
+scallops_length@vbLinf <- 110
+
 
 summary(scallops_length, wait=FALSE, rmd=TRUE)
 
