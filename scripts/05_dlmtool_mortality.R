@@ -47,6 +47,8 @@ dfratio.size <- dfmean %>%
   pivot_wider(names_from = stat, values_from = mean_ntailm2) %>%
   mutate(ratio = MOR/VIV)
 dfratio.size$ratio[is.nan(dfratio.size$ratio)] <- 0
+# save to outputs
+saveRDS(dfratio.size, "data/MORVIVratio.rds")
 
 # # plot by size
 # ggplot(dfratio.size) +
@@ -176,6 +178,7 @@ Scallop@Size_area_1 <- 1
 Scallop@Frac_area_1 <- 1
 Scallop@Prob_staying <- 0.8
 Scallop@Fdisc <- dfratio.all$ratio
+Scallop@Linf <- 110 # gueestimate based on max length
 
 
 OM1 <- new("OM", Scallop, Generic_Fleet, Generic_Obs, Perfect_Imp, nsim=150)
