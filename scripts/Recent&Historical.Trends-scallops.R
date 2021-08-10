@@ -52,6 +52,8 @@ CPUE_landings <-
   CPUE %>% group_by(Year) %>%
   summarise(Land.tons = sum(Land.tons, na.rm = TRUE),
             Year = Year)
+# save
+saveRDS(CPUE_landings, "data/cpue-landings-yearly.rds")
 
 # plot the landings over time
 (
