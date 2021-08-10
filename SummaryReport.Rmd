@@ -1,0 +1,66 @@
+---
+output: 
+  pdf_document:
+    template: eisvogel.tex
+title: "Stage BIOS2: Scallop trends with DLMtool"
+author: [Katherine Hébert]
+date: "2021-08-13"
+subtitle: "21 July to 13 August 2021"
+lang: "en"
+titlepage: true,
+titlepage-text-color: "FFFFFF"
+titlepage-rule-color: "FFFFFF"
+titlepage-rule-height: 2
+titlepage-background: "background.pdf"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Context
+
+## Scallops fishery
+
+
+
+## DLMtool
+
+DLMtool is an R package that was conceived to address a widespread problem in fisheries management: conventional stock assessments require a lot of data that is not available for as many as 90% of the world’s fish populations (Costello et al. 2012). Using object-oriented programming, DLMtool models data-limited fisheries under a variety of management strategies that can easily be compared and visualized according to the available information. This allows managers to compare a variety of management scenarios with an evaluation of uncertainty, of the trade-off between how management procedures benefit catch or population stability, and of the potential need to collect additional data.
+
+
+----
+
+# Data
+
+
+
+----
+
+# Exploring trends
+
+Before using DLMtool, I first explored the time series in the data provided to me to better understand the system. I first looked at catch data, which contained information about the biomass of the scallop catch per year in each surveyed zone, as well as the effort applied to the catch. After exploring the annual catch trend, I added length-at-capture data to look into the size structure of the catch, which would give insight into the population's structure. I also introduced mortality data into these explorations, to determine how scallop mortality varied (or not) over the sampled period, which would give additional insight into the population's status.
+
+## Catch 
+
+
+## Length 
+
+
+## Mortality 
+
+
+----
+
+# DLMTool
+
+## Creating a Data object
+
+### TACs
+
+## Creating a Fleet object
+
+## Creating an Operating Model
+
+
