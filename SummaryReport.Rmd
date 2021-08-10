@@ -2,16 +2,17 @@
 output: 
   pdf_document:
     template: eisvogel.tex
-title: "Stage BIOS2: Scallop trends with DLMtool"
+title: "Scallop trends with DLMtool"
 author: [Katherine Hébert]
 date: "2021-08-13"
-subtitle: "21 July to 13 August 2021"
+subtitle: "BIOS² Internship with Fisheries and Oceans Canada"
 lang: "en"
 titlepage: true,
 titlepage-text-color: "FFFFFF"
 titlepage-rule-color: "FFFFFF"
 titlepage-rule-height: 2
 titlepage-background: "background.pdf"
+bibliography: master.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -23,18 +24,23 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Scallops fishery
 
+Two scallop species are fished commercially in the Gulf of St. Lawrence: the Sea Scallop (Placopecten magellanicus) and the Iceland Scallop (Chlamys islandica) [@stockass]. Fishing is regulated by a fishing season, and or a limited number of fishing days [@stockass]. Every three years, the scallop stock is assessed to evaluate its status, and to verify whether the management plan and conservation approach need to be adjusted to maintain the resource [@stockass]. This assessment is based on landings, fishing effort, catch per unit effort, size structure, weight of muscle landed and density index from scientific surveys [@stockass].
 
+The scallop fishery is data-limited in the Gulf of St. Lawrence, meaning there is not enough data to conduct a conventional stock assessment. This is where the Data-Limited Methods Toolkit (DLMtool) comes into play.
 
 ## DLMtool
 
-DLMtool is an R package that was conceived to address a widespread problem in fisheries management: conventional stock assessments require a lot of data that is not available for as many as 90% of the world’s fish populations (Costello et al. 2012). Using object-oriented programming, DLMtool models data-limited fisheries under a variety of management strategies that can easily be compared and visualized according to the available information. This allows managers to compare a variety of management scenarios with an evaluation of uncertainty, of the trade-off between how management procedures benefit catch or population stability, and of the potential need to collect additional data.
-
+The Data-Limited Methods Toolkit ([DLMtool](https://www.datalimitedtoolkit.org/)) is an R package that was conceived to address a widespread problem in fisheries management: conventional stock assessments require a lot of data that is not available for as many as 90% of the world’s fish populations [@Costello517]. Using object-oriented programming and parallel computing, DLMtool models data-limited fisheries under a variety of management strategies that can easily be compared and visualized according to the available information [@DLMtool]. This allows managers to simulate a variety of management scenarios with an evaluation of uncertainty, of the trade-off between how management procedures benefit catch or population stability, and of the potential need to collect additional data. The result is a powerful and customisable simulation and diagnostics tool that synthesizes scenarios of over 114 management procedures to inform management recommendations in a transparent way [@DLMtool]. What began as a collaboration  between the University of British Columbia’s (UBC) Institute for Oceans and Fisheries and the Natural Resources Defense Council (NRDC) has now been used in over 25 fisheries by Fisheries and Oceans Canada, by the National Marine Fisheries Service in the U.S. Mid-Atlantic and Caribbean regions, and by the California Department of Fish & Wildlife, among others [@DLMtool].
 
 ----
 
 # Data
 
+For this internship, I had access to three datasets:
 
+- Catches per Unit Effort, including information about the landings, the effort, and the biomass of scallops fished 
+- Size structure of the catch (count by scallop length)
+- Mortality rates 
 
 ----
 
@@ -63,4 +69,4 @@ Before using DLMtool, I first explored the time series in the data provided to m
 
 ## Creating an Operating Model
 
-
+# References
