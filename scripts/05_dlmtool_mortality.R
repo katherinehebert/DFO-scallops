@@ -181,16 +181,19 @@ Scallop@Fdisc <- dfratio.all$ratio
 Scallop@Linf <- 110 # gueestimate based on max length
 
 
+Turing(DLMtool::testOM, DLMtool::SimulatedData, wait=FALSE)
+
 OM1 <- new("OM", Scallop, Generic_Fleet, Generic_Obs, Perfect_Imp, nsim=150)
-MSE1 <- runMSE(OM1)
+plot(OM1) # fails
+MSE1 <- runMSE(OM1) # fails
   
 
 # Specify historical effort trends (Fleet object) ------
 
 MyFleet <- Generic_Fleet
-MyFleet <- ChooseEffort(MyFleet) # might have to redo this... used figure of mean effort per year to approximate
+#MyFleet <- ChooseEffort(MyFleet) # might have to redo this... used figure of mean effort per year to approximate
 
-MyFleet@EffLower
-MyFleet@EffUpper
+#MyFleet@EffLower
+#MyFleet@EffUpper
 
 plot(MyFleet, Scallop, 50)
