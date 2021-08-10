@@ -93,7 +93,7 @@ PUE <- CPUE %>%
 
 # arrange plots together and save
 ggarrange(plot.Landings.Index, plot.CPUE, ncol=1, nrow=2)
-ggsave("figures/CPUE_Landings_alltime.png", width = 7.49, height = 6.42)
+ggsave("figures/CPUE_Landings_alltime.png", width = 6, height = 5)
 
 
 ### LAST 5 YEARS ###############################################################
@@ -128,11 +128,11 @@ fit1 <- lm(Land.tons~Year, RecYearLandings)
 Regression.Landings <- ggplotRegression(fit1, "Landings (t)")
 
 # arrange plots together and save
-quartz()
 ggarrange(plot.Recent.PUE, plot.Recent.Landings, Regression.PUE, Regression.Landings, ncol=2, nrow=2)
-ggsave("figures/CPUE_Landings_05Recent.png", width = 13.4, height = 7)
+ggsave("figures/CPUE_Landings_05Recent.png", width = 9, height = 5)
 
 ### LAST 10 YEARS ##############################################################
+
 
 # Recent trend in commercial landings in last 10 years
 RecYearLandings <- subset(CPUE_landings, Year >= max(CPUE_landings$Year)-9) #Get N recent number of year, often 5 to 10 
@@ -145,6 +145,23 @@ plot.Recent.Landings <-
   ylab("Landings (t)") +
   xlab("Year") +
   xlim(c(min(RecYearLandings$Year), max(RecYearLandings$Year)))
+
+# Get simple linear regression result for trend in time series
+fit1 <- lm(moy ~ Annee, RecYearPUE)
+Regression.PUE <- ggplotRegression(fit1, "Mean Survey CPUE (kg/tow)") 
+
+
+# Recent trend in CPUE from abundance survey in last 5 years
+RecYearPUE <- subset(PUE, Annee >= max(PUE$Annee)-9) # Get N recent number of year, often 5 to 10 
+# plot them
+plot.Recent.PUE <- ggplot(RecYearPUE, aes(x=Annee, y=moy)) +
+  geom_point(color="blue", size=3) +
+  geom_line(color="blue", size=1.25) +
+  ylab("Mean Survey CPUE (kg/tow)") +
+  xlab("Year") +
+  xlim(c(min(RecYearPUE$Annee), max(RecYearPUE$Annee))) +
+  geom_errorbar(aes(ymin=ICmin, ymax=ICmax), width=.5, position=position_dodge(.9), color = "blue")
+
 
 #Get simple linear regression result for trend in time series
 fit1 <- lm(Land.tons ~ Year, RecYearLandings)

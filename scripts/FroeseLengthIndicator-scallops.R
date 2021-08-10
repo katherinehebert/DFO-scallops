@@ -93,4 +93,4 @@ ggplot(data = DFO.Mat) +
                        "Intercept =",signif(fit$coef[[1]],5 ),
                        " Slope =",signif(fit$coef[[2]], 5),
                        " P =",signif(summary(fit)$coef[2,4], 5)))
-ggsave("figures/Percent_MatureScallops.png", width = 6.52, height = 5.22)
+ggsave("figures/Percent_MatureScallops.png", width = 6, height = 4)

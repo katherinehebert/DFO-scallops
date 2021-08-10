@@ -32,7 +32,7 @@ The scallop fishery is data-limited in the Gulf of St. Lawrence, meaning there i
 
 The Data-Limited Methods Toolkit ([DLMtool](https://www.datalimitedtoolkit.org/)) is an R package that was conceived to address a widespread problem in fisheries management: conventional stock assessments require a lot of data that is not available for as many as 90% of the world’s fish populations [@Costello517]. Using object-oriented programming and parallel computing, DLMtool models data-limited fisheries under a variety of management strategies that can easily be compared and visualized according to the available information [@DLMtool]. This allows managers to simulate a variety of management scenarios with an evaluation of uncertainty, of the trade-off between how management procedures benefit catch or population stability, and of the potential need to collect additional data. The result is a powerful and customisable simulation and diagnostics tool that synthesizes scenarios of over 114 management procedures to inform management recommendations in a transparent way [@DLMtool]. What began as a collaboration  between the University of British Columbia’s (UBC) Institute for Oceans and Fisheries and the Natural Resources Defense Council (NRDC) has now been used in over 25 fisheries by Fisheries and Oceans Canada, by the National Marine Fisheries Service in the U.S. Mid-Atlantic and Caribbean regions, and by the California Department of Fish & Wildlife, among others [@DLMtool].
 
-----
+\newpage
 
 # Data
 
@@ -42,22 +42,30 @@ For this internship, I had access to three datasets:
 - Size structure of the catch (count by scallop length)
 - Mortality rates 
 
-----
-
 # Exploring trends
 
 Before using DLMtool, I first explored the time series in the data provided to me to better understand the system. I first looked at catch data, which contained information about the biomass of the scallop catch per year in each surveyed zone, as well as the effort applied to the catch. After exploring the annual catch trend, I added length-at-capture data to look into the size structure of the catch, which would give insight into the population's structure. I also introduced mortality data into these explorations, to determine how scallop mortality varied (or not) over the sampled period, which would give additional insight into the population's status.
 
 ## Catch 
 
+![**Landings and Survey CPUE over all years.**](figures/CPUE_Landings_alltime.png)
+
+![**Landings and Survey CPUE over all years.**](figures/CPUE_Landings_Historical.png)
+
+![**Landings and Survey CPUE over the 5 most recent years.**](figures/CPUE_Landings_05Recent.png)
 
 ## Length 
 
+![**Slope of the mean density of scallops per length over time, in each surveyed sectors.**](figures/meanlengths_lmm_slopespersector.png)
+
+![**Mean trend through time of the mean density of scallops per length over all surveyed sectors.** *The solid black line is a linear model describing the change in weighted mean length of scallops surrounded by its 95% confidence intervals.*](figures/meanlengths_lm_boxplot.png)
+
+![**Mean trend through time of the mean density of scallops at maturity over all surveyed sectors.** *The solid blue line is a linear model describing the change in density of scallops at maturity surrounded by its 95% confidence intervals.*](figures/Percent_MatureScallops.png)
 
 ## Mortality 
 
 
-----
+\newpage
 
 # DLMTool
 
@@ -68,5 +76,14 @@ Before using DLMtool, I first explored the time series in the data provided to m
 ## Creating a Fleet object
 
 ## Creating an Operating Model
+
+\newpage
+
+# Appendix
+
+![**Density of scallops per length in each surveyed sector.**](figures/density_lengths_persector.png)
+
+
+\newpage 
 
 # References
