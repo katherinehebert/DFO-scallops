@@ -7,4 +7,9 @@
 # private data
 data_raw/
 data/
+
+# draft scripts
 scripts/03_dlmtool.R
+
+# unneeded folders
+MSEtool-master/
