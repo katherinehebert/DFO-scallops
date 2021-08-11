@@ -38,7 +38,7 @@ The Data-Limited Methods Toolkit ([DLMtool](https://www.datalimitedtoolkit.org/)
 
 For this internship, I had access to three datasets:
 
-- Catches per Unit Effort, including information about the landings, the effort, and the biomass of scallops fished 
+- 
 - Size structure of the catch (count by scallop length)
 - Mortality rates, subset to the years 2004 to 2019 because the sampling protocol changed just before this period of time.
 
@@ -48,11 +48,15 @@ Before using DLMtool, I first explored the time series in the data provided to m
 
 ## Catch 
 
-![**Landings and Survey CPUE over all years.**](figures/CPUE_Landings_alltime.png)
+First, I explored the commercial fishery dataset which contained Catches per Unit Effort (CPUE), and data describing the Effort, biomass fished (i.e. Landings), and other information describing each event such as date and location variables. These time series are plotted in Figures 1a and 1b. Though the Survey CPUE time series shows relative stability through time in terms of mean CPUE, there is some variability in the variance in CPUE across sectors, with particularly high variance in the years 2018, 1999, and 1996 (Figure 1a).
 
-![**Landings and Survey CPUE over all years.**](figures/CPUE_Landings_Historical.png)
+Then, I fit a simple linear model to each time series to determine an overall trend through time for each measure (Figure 1c and 1d). While CPUE has remained relatively stable since 1987 (Figure 1c), landings have been steadily decreasing at a rate of -29.39 **tons per year????** since 1987 despite a large increase before 1990 (Figure 1d). 
 
-![**Landings and Survey CPUE over the 5 most recent years.**](figures/CPUE_Landings_05Recent.png)
+![**Overview of landing and Survey CPUE trends over all years and all sectors.** (a) Landings in tonnes over all years available in the dataset, summed across all sectors. (b) Survey Catches per Unit Effort (CPUE), where points indicate the mean CPUE and the error bars show the 95% confidence intervals around the mean. Panels (c) and (d) show linear models fit to the time series plotted in (a) and (b), with model summary information printed in the figure caption. ](figures/CPUE_Landings_Historical.png)
+
+Though an overview of the whole time series is very helpful to gain an understanding of the broader context of the fishery and how it has been managed, a closer look at recent trends is helpful to evaluate the current status of the fishery (Figure 2). If we "zoom in" to the most recent 5 years, we get a slightly different picture of the Survey CPUE and Landings trends shown above. Notably, we can see that an average increase in Survey CPUE in 2018 (Figures 2a and 2c) was followed by a decrease in landings between 2018 and 2019 (Figures 2b and 2d). 
+
+![**Landings and Survey CPUE over the 5 most recent years.** (a) Landings in tonnes over all years available in the dataset, summed across all sectors. (b) Survey Catches per Unit Effort (CPUE), where points indicate the mean CPUE and the error bars show the 95% confidence intervals around the mean. Panels (c) and (d) show linear models fit to the time series plotted in (a) and (b), with model summary information printed in the figure caption.](figures/CPUE_Landings_05Recent.png)
 
 ## Length 
 
