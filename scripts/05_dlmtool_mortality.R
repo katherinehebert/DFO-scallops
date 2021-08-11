@@ -38,9 +38,9 @@ ggplot(dfmean) +
 ggplot(dfmean) +
   geom_bar(aes(x = as.character(annee), y = mean_ntailm2, fill = stat), 
            stat = "identity", position = "dodge", width = .6) +
-  facet_wrap(~secteur) +
+  facet_wrap(~secteur, ncol = 3) +
   labs(x = "", y = "Mean count per length", fill = "Status")
-ggsave("figures/mortality_barplot.png", width = 14.2, height = 7.22)
+ggsave("figures/mortality_barplot.png", width = 11, height = 10)
 
 # calculate mort/vivant ratio per size
 dfratio.size <- dfmean %>%
@@ -50,26 +50,6 @@ dfratio.size <- dfmean %>%
 dfratio.size$ratio[is.nan(dfratio.size$ratio)] <- 0
 # save to outputs
 saveRDS(dfratio.size, "data/MORVIVratio.rds")
-
-# # plot by size
-# ggplot(dfratio.size) +
-#   #geom_bar(aes(x = annee, y = ratio), stat = "identity") +
-#   geom_point(aes(x = annee, y = ratio, col = taille)) +
-#   facet_wrap(~secteur) +
-#   scale_color_distiller(palette = "Purples", direction = -1)
-# ggplot(dfratio.size) +
-#   geom_boxplot(aes(x = as.character(annee), y = ratio)) +
-#   facet_wrap(~secteur)
-
-
-# library(ggridges)
-# ggplot(filter(dfratio.size, secteur == "A")) +
-#   ggridges::geom_density_ridges(aes(y = as.character(annee), 
-#                                     x = ratio, 
-#                                     fill = annee), 
-#                                 stat = "binline", 
-#                                 alpha = .5)
-
 
 # calculate per sector mort/vivant ratio
 
@@ -90,7 +70,7 @@ ggplot(dfratio.all) +
   geom_smooth(aes(x = annee, y = ratio, col = secteur, fill = secteur), method = "lm") +
   facet_wrap(~secteur) +
   theme(legend.position = "none") +
-  labs(y = "Ratio Dead/Alive", x = "")
+  labs(y = "Ratio MOR/VIV", x = "")
 ggsave("figures/mortality_persector.png", width = 7.8, height = 6.2)
 
 
@@ -113,10 +93,9 @@ ggplot(dfratio.all) +
   geom_point(aes(x = annee, y = ratio)) +
   geom_smooth(aes(x = annee, y = ratio), method = "lm") +
   theme(legend.position = "none") +
-  labs(y = "Ratio Dead/Alive", x = "") +
+  labs(y = "Ratio MOR/VIV", x = "") +
   coord_cartesian(ylim = c(0,0.10))
 ggsave("figures/mortality_overall.png", width = 4.96, height = 2.54)
-
 
 
 
