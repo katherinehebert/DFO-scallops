@@ -32,15 +32,11 @@ The scallop fishery is data-limited in the Gulf of St. Lawrence, meaning there i
 
 The Data-Limited Methods Toolkit ([DLMtool](https://www.datalimitedtoolkit.org/)) is an R package that was conceived to address a widespread problem in fisheries management: conventional stock assessments require a lot of data that is not available for as many as 90% of the world’s fish populations [@Costello517]. Using object-oriented programming and parallel computing, DLMtool models data-limited fisheries under a variety of management strategies that can easily be compared and visualized according to the available information [@DLMtool]. This allows managers to simulate a variety of management scenarios with an evaluation of uncertainty, of the trade-off between how management procedures benefit catch or population stability, and of the potential need to collect additional data. The result is a powerful and customisable simulation and diagnostics tool that synthesizes scenarios of over 114 management procedures to inform management recommendations in a transparent way [@DLMtool]. What began as a collaboration  between the University of British Columbia’s (UBC) Institute for Oceans and Fisheries and the Natural Resources Defense Council (NRDC) has now been used in over 25 fisheries by Fisheries and Oceans Canada, by the National Marine Fisheries Service in the U.S. Mid-Atlantic and Caribbean regions, and by the California Department of Fish & Wildlife, among others [@DLMtool].
 
-\newpage
+## Objectives
 
-# Data
+The internship’s main objective is to learn and apply the Data-Limited Methods Toolkit to evaluate scallop stocks. The first objective was to learn the toolkit and describe the main findings in the current report, with the option to a method with high performance to model scallop stocks if time permits. Though time did not permit me to go in much depth with this, I was able to construct some of the objects used in the DLM toolkit workflow to eventually evaluate stocks with greater accuracy and precision. In this report, I will begin by outlining some general trends in scallop catches, length structures, and mortality rates, before describing how I built objects with these datasets using DLMtool. All scripts to generate the figures and results shown in this report are accessible here: **REPO LINK**.
 
-For this internship, I had access to three datasets:
-
-- 
-- Size structure of the catch (count by scallop length)
-- Mortality rates, subset to the years 2004 to 2019 because the sampling protocol changed just before this period of time.
+----
 
 # Exploring trends
 
@@ -58,19 +54,40 @@ Though an overview of the whole time series is very helpful to gain an understan
 
 ![**Landings and Survey CPUE over the 5 most recent years.** (a) Landings in tonnes over all years available in the dataset, summed across all sectors. (b) Survey Catches per Unit Effort (CPUE), where points indicate the mean CPUE and the error bars show the 95% confidence intervals around the mean. Panels (c) and (d) show linear models fit to the time series plotted in (a) and (b), with model summary information printed in the figure caption.](figures/CPUE_Landings_05Recent.png)
 
+Both plots and analyses in Figures 1 and 2 were adapted from @refpoint [github.com/MathBoud/DLM.ReferencePoint](https://github.com/MathBoud/DLM.ReferencePoint). The code to reproduce these figures **is in the script ____ in the repo _________**.
+
+
 ## Length 
 
+Though the overall trend is informative, I also had access to a survey of scallop length counts through time, which offer insight into the Gulf population's structure which is not accessible in the overall catch and landings time series explored above. First, I took the weighted mean of scallop length per year, where the weights were the counts of scallops in each length category. As such, the weighted mean represents the mean length of the population for each year, accounting for the abundance of scallops at different lengths. 
+
+To determine the trend in mean length over the time series, I compared a simple linear model of the relationship between mean length and year to two linear mixed models: one with a random effect by sector on the model intercept, and one with a random effect on the slope by sector, to account for differences in the populations between sectors. Though there is some variability in the mean length trend in different sectors, the simple linear model
+
+table describing the models here, and their aic
+
+applied a linear model to these weighted mean lengths, to v (Figure 3). 
 
 ![**Mean trend through time of the mean density of scallops per length over all surveyed sectors.** *The solid black line is a linear model describing the change in weighted mean length of scallops surrounded by its 95% confidence intervals.*](figures/meanlengths_lm_boxplot.png)
 
-![**Mean trend through time of the mean density of scallops at maturity over all surveyed sectors.** *The solid blue line is a linear model describing the change in density of scallops at maturity surrounded by its 95% confidence intervals.*](figures/Percent_MatureScallops.png)
 
 If we evaluate the trend in each sector, the slopes differ as such:
 
 ![**Slope of the mean density of scallops per length over time, in each surveyed sectors.**](figures/meanlengths_lmm_slopespersector.png)
 
 
+
+Froese length indicators 
+
+Among other things, length surveys provide information about the proportion of the scallop population which has attained maturity, which is an indicator of ____.
+
+![**Mean trend through time of the mean density of scallops at maturity over all surveyed sectors.** *The solid blue line is a linear model describing the change in density of scallops at maturity surrounded by its 95% confidence intervals.*](figures/Percent_MatureScallops.png)
+
+
 ## Mortality 
+
+- Mortality rates, subset to the years 2004 to 2019 because the sampling protocol changed just before this period of time.
+
+
 
 ![**Count of dead and alive scallops annually in each sector**.](figures/mortality_barplot.png)
 
@@ -78,9 +95,7 @@ If we evaluate the trend in each sector, the slopes differ as such:
 ![**Trend of dead/alive ratio in each sector**.](figures/mortality_persector.png)
 ![**Trend in mortality across all sectors**](figures/mortality_overall.png)
 
-
-
-\newpage
+----
 
 # DLMTool
 
@@ -91,13 +106,6 @@ If we evaluate the trend in each sector, the slopes differ as such:
 ## Creating a Fleet object
 
 ## Creating an Operating Model
-
-\newpage
-
-# Appendix
-
-![**Density of scallops per length in each surveyed sector.**](figures/density_lengths_persector.png)
-
 
 \newpage 
 
