@@ -39,7 +39,8 @@ ggplot(dfmean) +
   geom_bar(aes(x = as.character(annee), y = mean_ntailm2, fill = stat), 
            stat = "identity", position = "dodge", width = .6) +
   facet_wrap(~secteur) +
-  labs(x = "Year", y = "Mean number per lengthm2", fill = "Status")
+  labs(x = "", y = "Mean count per length", fill = "Status")
+ggsave("figures/mortality_barplot.png", width = 14.2, height = 7.22)
 
 # calculate mort/vivant ratio per size
 dfratio.size <- dfmean %>%
@@ -70,22 +71,54 @@ saveRDS(dfratio.size, "data/MORVIVratio.rds")
 #                                 alpha = .5)
 
 
-# calculate overall mort/vivant ratio
+# calculate per sector mort/vivant ratio
 
 dfmean.all <- df %>%
   group_by(secteur, zone, annee, stat) %>%
-  summarise(mean_ntailm2 = mean(ntailm2, na.rm = TRUE)) %>% 
+  summarise(sum_ntailm2 = sum(ntailm2, na.rm = TRUE)) %>% 
   ungroup()
 
 dfratio.all <- dfmean.all %>%
   group_by(secteur, zone, annee) %>%
-  pivot_wider(names_from = stat, values_from = mean_ntailm2) %>%
+  pivot_wider(names_from = stat, values_from = sum_ntailm2) %>%
   mutate(ratio = MOR/VIV)
+dfratio.all$ratio[which(is.nan(dfratio.all$ratio))] <- 0
 
 # plot by sector
 ggplot(dfratio.all) +
-  geom_line(aes(x = annee, y = ratio, group = zone)) +
-  facet_wrap(~secteur)
+  geom_point(aes(x = annee, y = ratio)) +
+  geom_smooth(aes(x = annee, y = ratio, col = secteur, fill = secteur), method = "lm") +
+  facet_wrap(~secteur) +
+  theme(legend.position = "none") +
+  labs(y = "Ratio Dead/Alive", x = "")
+ggsave("figures/mortality_persector.png", width = 7.8, height = 6.2)
+
+
+
+# calculate OVERALL mort/vivant ratio
+
+dfmean.overall <- df %>%
+  group_by(annee, stat) %>%
+  summarise(sum_ntailm2 = sum(ntailm2, na.rm = TRUE)) %>% 
+  ungroup()
+
+dfratio.all <- dfmean.overall %>%
+  group_by(annee) %>%
+  pivot_wider(names_from = stat, values_from = sum_ntailm2) %>%
+  mutate(ratio = MOR/VIV)
+dfratio.all$ratio[which(is.nan(dfratio.all$ratio))] <- 0
+
+# plot by sector
+ggplot(dfratio.all) +
+  geom_point(aes(x = annee, y = ratio)) +
+  geom_smooth(aes(x = annee, y = ratio), method = "lm") +
+  theme(legend.position = "none") +
+  labs(y = "Ratio Dead/Alive", x = "") +
+  coord_cartesian(ylim = c(0,0.10))
+ggsave("figures/mortality_overall.png", width = 4.96, height = 2.54)
+
+
+
 
 #### Create Data object with mortality information #####    
 

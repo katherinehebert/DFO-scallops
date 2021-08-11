@@ -1,6 +1,17 @@
 # Model mortality through time
 
+rm(list=ls())
+
+# load packages
+library(ggplot2)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(patchwork)
+library(scales)
 library(Hmisc)
+
+theme_set(ggpubr::theme_pubclean())
 
 # read the prepared data
 df <- readRDS("data/MORVIVratio.rds")
@@ -10,22 +21,23 @@ df <- readRDS("data/MORVIVratio.rds")
 # subset to data from 2004-2019
 df <- df %>% filter(annee %in% 2004:2019)
 df$Total <- df$MOR + df$VIV
+df$ratio[which(is.nan(df$ratio))] <- 0
 hist(df$ratio)
 
 # group and summarize mean density of scallops by length
 
 dfmean <- df %>%
-  group_by(secteur, zone, annee, taille) %>%
+  group_by(secteur, annee) %>%
   summarise(mean_ratio = mean(ratio, na.rm = TRUE)) %>% 
   ungroup()
 hist(dfmean$mean_ratio)
 
 # visualise to check
 # as barplot
-ggplot(df) +
+ggplot(dfmean) +
   geom_bar(aes(x = as.character(annee), 
-               y = ratio), 
-           stat = "identity", 
+               y = mean_ratio), 
+           stat = "identity", position = "dodge",
            width = .6) +
   facet_wrap(~secteur) +
   labs(x = "Year", y = "Mean ratio of mortality")
@@ -34,7 +46,7 @@ ggplot(df) +
 # Plot ratio over time
 
 ggplot(dfmean) +
-  geom_line(aes(y = mean_ratio, x = annee, group = taille)) +
+  geom_line(aes(y = mean_ratio, x = annee)) +
   facet_wrap(~secteur)
 
 

@@ -24,7 +24,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Scallops fishery
 
-Two scallop species are fished commercially in the Gulf of St. Lawrence: the Sea Scallop (Placopecten magellanicus) and the Iceland Scallop (Chlamys islandica) [@stockass]. Fishing is regulated by a fishing season, and or a limited number of fishing days [@stockass]. Every three years, the scallop stock is assessed to evaluate its status, and to verify whether the management plan and conservation approach need to be adjusted to maintain the resource [@stockass]. This assessment is based on landings, fishing effort, catch per unit effort, size structure, weight of muscle landed and density index from scientific surveys [@stockass].
+Two scallop species are fished commercially in the Gulf of St. Lawrence: the Sea Scallop (*Placopecten magellanicus*) and the Iceland Scallop (*Chlamys islandica*) [@stockass]. Fishing is regulated by a fishing season, and or a limited number of fishing days [@stockass]. Every three years, the scallop stock is assessed to evaluate its status, and to verify whether the management plan and conservation approach need to be adjusted to maintain the resource [@stockass]. This assessment is based on landings, fishing effort, catch per unit effort, size structure, weight of muscle landed and density index from scientific surveys [@stockass].
 
 The scallop fishery is data-limited in the Gulf of St. Lawrence, meaning there is not enough data to conduct a conventional stock assessment. This is where the Data-Limited Methods Toolkit (DLMtool) comes into play.
 
@@ -40,7 +40,7 @@ For this internship, I had access to three datasets:
 
 - Catches per Unit Effort, including information about the landings, the effort, and the biomass of scallops fished 
 - Size structure of the catch (count by scallop length)
-- Mortality rates 
+- Mortality rates, subset to the years 2004 to 2019 because the sampling protocol changed just before this period of time.
 
 # Exploring trends
 
@@ -56,13 +56,24 @@ Before using DLMtool, I first explored the time series in the data provided to m
 
 ## Length 
 
-![**Slope of the mean density of scallops per length over time, in each surveyed sectors.**](figures/meanlengths_lmm_slopespersector.png)
 
 ![**Mean trend through time of the mean density of scallops per length over all surveyed sectors.** *The solid black line is a linear model describing the change in weighted mean length of scallops surrounded by its 95% confidence intervals.*](figures/meanlengths_lm_boxplot.png)
 
 ![**Mean trend through time of the mean density of scallops at maturity over all surveyed sectors.** *The solid blue line is a linear model describing the change in density of scallops at maturity surrounded by its 95% confidence intervals.*](figures/Percent_MatureScallops.png)
 
+If we evaluate the trend in each sector, the slopes differ as such:
+
+![**Slope of the mean density of scallops per length over time, in each surveyed sectors.**](figures/meanlengths_lmm_slopespersector.png)
+
+
 ## Mortality 
+
+![**Count of dead and alive scallops annually in each sector**.](figures/mortality_barplot.png)
+
+
+![**Trend of dead/alive ratio in each sector**.](figures/mortality_persector.png)
+![**Trend in mortality across all sectors**](figures/mortality_overall.png)
+
 
 
 \newpage
