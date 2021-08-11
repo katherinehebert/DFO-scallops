@@ -1,7 +1,18 @@
 # Model length differences through time
 
+## continue this, my brain is dying
+
+
 # load packages
+library(ggplot2)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(patchwork)
+library(scales)
 library(Hmisc)
+
+theme_set(ggpubr::theme_pubclean())
 
 # read the prepared data
 sizes <- read_csv("data/scallop-sizes.csv")
@@ -63,9 +74,13 @@ hist(resid(m2))
 
 # compare
 AIC.table <- MuMIn::model.sel(m0, m1, m2)
+saveRDS(AIC.table, "outputs/model_length_AIC.rds")
 # basic linear model still comes through as the best option
-broom::tidy(m0)
+tidym0 <- broom::tidy(m0)
+saveRDS(tidym0, "outputs/model_length_m0_tidy.rds")
+# check out model summary
 summary(m0)
+saveRDS(m0, "outputs/model_length_m0.rds")
 
 
 # plot the model over the time series
@@ -106,7 +121,6 @@ coefs$sector <- rownames(coefs)
 coefs <- coefs[order(coefs$Year, decreasing = FALSE),]
 coefs$sector <- factor(coefs$sector, levels = coefs$sector)
 # plot
-quartz()
 ggplot(coefs) +
   geom_segment(aes(x = Year, xend = 0, y = sector, yend = sector, col = Year),
                lwd = .8)+
@@ -118,4 +132,4 @@ ggplot(coefs) +
                         limits = c(-0.0046,0.0046)) +
   theme(legend.position = "right") +
   labs(col = "Slope", y = "Sector", x = "Slope (Mean Length ~ Year)")
-ggsave("figures/meanlengths_lmm_slopespersector.png", width = 7, height = 7)
+ggsave("figures/meanlengths_lmm_slopespersector.png", width = 6, height = 3.5)
