@@ -4,6 +4,8 @@
 
 rm(list=ls())
 
+setwd("~/Documents/GitHub/DFO-scallops/")
+
 library(ggplot2)
 library(readr)
 library(dplyr)
@@ -18,7 +20,7 @@ setup()
 
 # Data -------------------------------------------------------------------------
 
-# read the prepared data (generated with 01_dataprep.R)
+# read the prepared data (generated with 01_Prepare_datasets.R)
 cpue <- read_csv("data/scallop-cpue.csv")
 
 # make matrix of nsim rows and nyears columns for catch data
@@ -104,7 +106,7 @@ plot(Scallop)
 plot(Generic_Fleet, Scallop)
 plot(Generic_Obs)
 plot(Perfect_Imp)
-plot(OM)
+plot(OM1)
 
 setwd("~/Documents/GitHub/DFO-scallops/")
 # run Management Strategy Evaluation
