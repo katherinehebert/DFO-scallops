@@ -113,14 +113,14 @@ This mortality ratio was also calculated for each sector and each year, to asses
 
 ------------------------------------------------------------------------
 
-# `DLMtool` with the CPUE dataset
+# `DLMtool` 
 
-## Data object
+## Data object 
 
-First, I created a catch matrix, and average catch matrix, and a mean effort matrix:
+First, I created a catch matrix, and average catch matrix, and a mean effort matrix with the CPUE dataset:
 
 ```{r, message=FALSE}
-# read the prepared data (generated with 01_dataprep.R)
+# read the prepared data (generated with 01_Prepare_datasets.R)
 cpue <- read_csv("data/scallop-cpue.csv")
 
 # make matrix of nsim rows and nyears columns for catch data
@@ -142,9 +142,12 @@ effort_matrix <- pivot_wider(subset(cpue, select = c(Year, Effort_hm)),
   as.matrix()
 ```
 
+
+
+
 Then, I created a Data object with `DLMtool`, and filled it with the available information in the dataset:
 
-```{r, message=FALSE}
+```{r message=FALSE}
 # create data object
 scallops <- new('Data')
 # populate the data file
@@ -161,6 +164,22 @@ scallops@t <- length(unique(cpue$Year))
 scallops@MPeff <- 1 # set to today's effort for comparison
 ```
 
+I then added information from the Length frequency dataset, and the mortality dataset:
+
+```{r}
+# From the length frequency datase
+scallops@L95 <- 40 # length at maturity from FroeseLengthIndicator-scallop.R script
+scallops@vbLinf <- 110
+scallops@MaxAge <- 20 
+# max age from https://www.fisheries.noaa.gov/species/atlantic-sea-scallop#:~:text=Biology,grow%20larger%20than%206%20inches.
+```
+
+From the information in this Data object, several other parameters are estimated, such as the von B. Linf parameter:
+
+```{r, echo = FALSE, message = FALSE, fig.keep = 'last', results='hide'}
+summary(scallops, wait=FALSE, rmd=TRUE)
+```
+
 ## TACs
 
 Even with such little data, it is possible to apply several Management Procedures to the Data object to generate Total Allowable Catch recommendations.
@@ -173,23 +192,117 @@ Can(scallops)
 Then, Total Allowable Catch recommendations can be obtained for each of the evaluated MPs.
 
 ```{r, message=FALSE, echo = FALSE}
-TACs <- readRDS("outputs/TACs_DLMtool_cpue.rds") %>% boxplot()
+TACs <- TAC(scallops)  
+boxplot(TACs)
+```
+
+\newpage
+
+## Operating Model
+
+### `Stock` object
+
+To make a `Stock` object, I based myself on one of the available Stocks in `DLMtool` and replaced information with appropriate quantities for the scallop stock where available, from the datasets explored previously in the report. 
+
+  **That being said, the `Stock` object is not necessarily an accurate representation of the scallop stock, but more of a jumping-off point to explore the functionalities of `DLMtool`.** The results of the Operating Model built with this `Stock` object are not supposed to represent reality. 
+
+The `Stock` object was built as follows:
+
+```{r}
+# create and populate stock object
+Scallop <- Albacore
+# populate the data file
+# here, I am basing it on the Albacore Stock object for simplicity,
+# and filling it with known values from the datasets,
+# though this is not correct!!
+Scallop@Name <- "Stock"
+Scallop@Common_Name <- "Scallop"
+Scallop@maxage <- 20 
+Scallop@Linfsd <- c(0.05, 0.1) # arbitrary range 
+Scallop@Linf <- c(110, 120) # guesstimate based on max length in the Length dataset
+Scallop@Fdisc <- c(0, 0.05) # upper limit: mean MOR/VIV ratio from the mortality dataset
+
+# MaxAge was from  https://www.fisheries.noaa.gov/species/atlantic-sea-scallop#:~:text=Biology,grow%20larger%20than%206%20inches.
 ```
 
 
-# `DLMtool` with Length Frequency dataset
+### Management Strategy Evaluation
 
-### Creating the Data object
+The Operating Model consists of the `Stock` object, as well as a `Fleet` object, `Obs` (Observation model) object, and `Imp` (Implementation model) object. For simplicity, I am using some of the available default models for the `Fleet`, `Obs`, and `Imp` objects to generate the Operation Model (`OM`):
+
+```{r, eval = FALSE}
+OM1 <- new("OM", 
+           Scallop, 
+           Generic_Fleet, 
+           Generic_Obs, 
+           Perfect_Imp, 
+           nsim = 150)
+# run Management Strategy Evaluation
+MSE1 <- runMSE(OM1)  
+```
+
+```{r, echo = FALSE}
+OM1 <- new("OM", 
+           Scallop, 
+           Generic_Fleet, 
+           Generic_Obs, 
+           Perfect_Imp, 
+           nsim = 150)
+MSE1 <- readRDS("outputs/MSE.rds")
+```
+
+```{r, echo = FALSE, results='hide', message=FALSE, warning=FALSE}
+summary(MSE1) %>% 
+  kableExtra::kable() %>% 
+  kableExtra::kable_styling(full_width = TRUE)
+```
 
 
+### Validating and plotting the MSE
+
+**Is the Operating Model representative of reality?**
+
+```{r, echo = FALSE, fig.keep = 'last', fig.cap = "Turing plot comparing the Operating Model to the Scallop Data object. The true catch time series is shown in blue, and the simulations from the OM are shown in black.", results='hide', message=FALSE, warning = FALSE}
+Turing(OM1, scallops, wait=FALSE)
+```
+
+For the Operating Model to be accurate, it should be difficult to discern the true data (in blue) from the simulation data (in black). In this case, it is not impossible to tell the difference, but the simulations are not far off from the true data. The Operating Model could be improved with more accurate information in the Stock model object, as well as the Fleet, Observation, and Implementation models.
+
+**Has the MSE converged?** 
+
+The MSE was generated with enough simulations, and the convergence is stable:
+
+```{r, echo = FALSE, fig.show='hide', message = FALSE}
+Converge(MSE1)
+```
+
+**How do the MPs trade-off yield and biomass?**
+
+```{r, echo = FALSE, fig.cap = "Trade-off between long-term and short-term yield, and the trade-off between biomass being above 0.1 BMSY and the expected variability in the yield. MPs that fail to meet one or both of the risk thresholds for each axis are shown in italics text."}
+Tplot2(MSE1)
+```
+
+The trade-off plot is accompanied by a table showing the performance of each Management Procedure according to 5 performance metrics. There is also a column which designates whether the Management Procedure is Satisificed, i.e., if it meets the minimum performance criteria for all performance metrics. In this case, none of them are Satisificed, likely because the Operating Model has not been constructed with some necessary information to evaluate it properly. 
 
 
+**What is the likelihood of meeting biomass targets in coming years?**
 
-# `DLMtool` with Mortality dataset
+![Likelihood of meeting biomass targets in future years for each Management Procedure.](figures/wormplot.pdf)
 
-## Creating a Fleet object
 
-## Creating an Operating Model
+**If we project the model into future years, what would it look like for each MP?**
+
+![Trajectories of biomass, fishing mortality, and relative yield for the Management Procedures.](figures/projection_plot.pdf)
+
+\newpage
+
+# Summary
+
+Though the scallop fishery is data-limited, `DLMtool` makes it possible to quickly build models and simulations that allow different management procedures to be tested and compared, even when someone is not as familiar with the study system or the package (as I was during this internship). Just as importantly, the package clarifies which information is needed and should be found or included to improve these models, leading to a more effective way of managing the stock.
+
+# Thank you!
+
+Thank you to Rénald Belley for guiding me through this remote internship with Fisheries and Oceans Canada - hopefully next time, it would be in person! Thank you also to BIOS2 and the NSERC Create program for giving me the opportunity to pursue this internship.
 
 \newpage
 
