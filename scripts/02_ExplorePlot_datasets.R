@@ -162,3 +162,79 @@ p0 / p2 +
   plot_layout(heights = unit(c(1.5, 1), c('cm', 'null')))
 ggsave("figures/density_lengths_persector_fill.png", width = 8.42, height = 8.6)
 
+# MORTALITY RATIO --------------------------------------------------------------
+
+# read the prepared data
+df <- read_csv("data/scallop-mortality.csv")
+
+### group by sector-zone-year to match sizes and mortality #####################
+
+# subset to data from 2004-2019
+df <- df %>% filter(annee %in% 2004:2019)
+
+# group and summarize mean density of scallops by length
+
+dfmean <- df %>%
+  group_by(secteur, zone, annee, stat, taille) %>%
+  summarise(mean_ntailm2 = mean(ntailm2, na.rm = TRUE)) %>% 
+  ungroup()
+
+# visualise mortality ratio as barplot
+ggplot(dfmean) +
+  geom_bar(aes(x = as.character(annee), y = mean_ntailm2, fill = stat), 
+           stat = "identity", position = "dodge", width = .6) +
+  facet_wrap(~secteur, ncol = 3) +
+  labs(x = "", y = "Mean count per length", fill = "Status")
+ggsave("figures/mortality_barplot.png", width = 11, height = 10)
+
+# calculate mort/vivant ratio per size
+dfratio.size <- dfmean %>%
+  group_by(secteur, zone, stat, annee, taille) %>%
+  pivot_wider(names_from = stat, values_from = mean_ntailm2) %>%
+  mutate(ratio = MOR/VIV)
+dfratio.size$ratio[is.nan(dfratio.size$ratio)] <- 0
+# save to outputs
+saveRDS(dfratio.size, "data/MORVIVratio.rds")
+
+# calculate per sector mort/vivant ratio
+dfmean.sector <- df %>%
+  group_by(secteur, zone, annee, stat) %>%
+  summarise(sum_ntailm2 = sum(ntailm2, na.rm = TRUE)) %>% 
+  ungroup()
+
+dfratio.sector <- dfmean.sector %>%
+  group_by(secteur, zone, annee) %>%
+  pivot_wider(names_from = stat, values_from = sum_ntailm2) %>%
+  mutate(ratio = MOR/VIV)
+dfratio.sector$ratio[which(is.nan(dfratio.sector$ratio))] <- 0
+
+# plot by sector
+ggplot(dfratio.sector) +
+  geom_point(aes(x = annee, y = ratio)) +
+  geom_smooth(aes(x = annee, y = ratio, col = secteur, fill = secteur), method = "lm") +
+  facet_wrap(~secteur) +
+  theme(legend.position = "none") +
+  labs(y = "Ratio MOR/VIV", x = "")
+ggsave("figures/mortality_persector.png", width = 7.8, height = 6.2)
+
+# calculate OVERALL mort/vivant ratio
+
+dfmean.overall <- df %>%
+  group_by(annee, stat) %>%
+  summarise(sum_ntailm2 = sum(ntailm2, na.rm = TRUE)) %>% 
+  ungroup()
+
+dfratio.all <- dfmean.overall %>%
+  group_by(annee) %>%
+  pivot_wider(names_from = stat, values_from = sum_ntailm2) %>%
+  mutate(ratio = MOR/VIV)
+dfratio.all$ratio[which(is.nan(dfratio.all$ratio))] <- 0
+
+# plot by sector
+ggplot(dfratio.all) +
+  geom_point(aes(x = annee, y = ratio)) +
+  geom_smooth(aes(x = annee, y = ratio), method = "lm") +
+  theme(legend.position = "none") +
+  labs(y = "Ratio MOR/VIV", x = "") +
+  coord_cartesian(ylim = c(0,0.10))
+ggsave("figures/mortality_overall.png", width = 4.96, height = 2.54)

@@ -131,8 +131,7 @@ Regression.Landings <- ggplotRegression(fit1, "Landings (t)")
 ggarrange(plot.Recent.PUE, plot.Recent.Landings, Regression.PUE, Regression.Landings, ncol=2, nrow=2)
 ggsave("figures/CPUE_Landings_05Recent.png", width = 9, height = 5)
 
-### LAST 10 YEARS ##############################################################
-
+### LAST 10 YEARS #############################################################
 
 # Recent trend in commercial landings in last 10 years
 RecYearLandings <- subset(CPUE_landings, Year >= max(CPUE_landings$Year)-9) #Get N recent number of year, often 5 to 10 
@@ -173,7 +172,6 @@ ggsave("figures/CPUE_Landings_10Recent.png", width = 13.4, height = 7)
 
 
 ## HISTORICAL ##################################################################
-# this is where i'm at
 
 # Historical trend in CPUE from abundance survey time series
 plot.Hist.PUE <- 
