@@ -140,9 +140,9 @@ Pplot(MSE1)
 dev.off()
 
 # projection plot with chosen variables
-pdf("figures/projection_plot.pdf")
-Pplot2(MSE1, YVar=c("B_BMSY", "F_FMSY", "Yield"))
-dev.off()
+#pdf("figures/projection_plot.pdf")
+#Pplot2(MSE1, YVar=c("B_BMSY", "F_FMSY", "Yield"))
+#dev.off()
 
 # compare to current conditions
 pdf("figures/comparison_plot.pdf")
