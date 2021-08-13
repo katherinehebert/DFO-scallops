@@ -19,14 +19,3 @@ glimpse(mort)
 write.csv(size, "data/scallop-sizes.csv", row.names = FALSE)
 write.csv(cpue, "data/scallop-cpue.csv", row.names = FALSE)
 write.csv(mort, "data/scallop-mortality.csv", row.names = FALSE)
-
-# plot effort to populate Fleet object later -----------------------------------
-
-# get mean effort per year
-eff <- cpue %>%
-  group_by(Year) %>%
-  summarise(meanEffort = mean(Effort_hm, na.rm = TRUE))
-# visualise
-ggplot(eff) +
-  geom_line(aes(x = Year, y = meanEffort))
-ggsave("figures/meanEffort_year.png", width = 5.7, height = 2.75)

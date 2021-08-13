@@ -20,6 +20,16 @@ cpue <- read_csv("data/scallop-cpue.csv")
 cpue_gr <- cpue %>%
   group_by(Div, Quadril, Zone_ges) 
 
+# get mean effort per year
+eff <- cpue %>%
+  group_by(Year) %>%
+  summarise(meanEffort = mean(Effort_hm, na.rm = TRUE))
+# visualise
+ggplot(eff) +
+  geom_line(aes(x = Year, y = meanEffort))
+ggsave("figures/meanEffort_year.png", width = 5.7, height = 2.75)
+
+
 ## exploratory plots
 
 # effort
@@ -75,7 +85,6 @@ ggplot(data = cpue_summ,
 
 
 # cpue
-
 ggplot(data = cpue_summ, 
        aes(x = Year)) +
   geom_ribbon(aes(ymin = mean_cpue_hm - 2*sd_cpue_hm,
@@ -86,7 +95,6 @@ ggplot(data = cpue_summ,
        y = "Mean CPUE (hm)")
 
 # weight
-
 ggplot(data = cpue_summ, 
        aes(x = Year)) +
   geom_ribbon(aes(ymin = mean_weight_muscle - 2*sd_weight_muscle,
