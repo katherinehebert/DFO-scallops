@@ -126,7 +126,7 @@ dev.off()
 
 # tradeoff plot
 pdf("figures/tradeoffplot.pdf")
-Tplot2(MSE1)
+Tplot(MSE1)
 dev.off()
 
 # wormplot to check if 
