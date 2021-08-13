@@ -282,10 +282,10 @@ Turing(OM1, scallops, wait=FALSE)
 
 \newpage
 
-**How do the MPs trade-off yield and biomass?** The trade-off plot is accompanied by a table showing the performance of each Management Procedure according to 5 performance metrics. There is also a column which designates whether the Management Procedure is Satisificed, i.e., if it meets the minimum performance criteria for all performance metrics. In this case, none of them are Satisificed, likely because the Operating Model has not been constructed with some necessary information to evaluate it properly. 
+**How do the MPs trade-off short and long-term yield?** The trade-off plot is accompanied by a table showing the performance of each Management Procedure according to 5 performance metrics. There is also a column which designates whether the Management Procedure is Satisificed, i.e., if it meets the minimum performance criteria for all performance metrics. In this case, some MPs are not Satisificed, likely because the Operating Model has not been constructed with some necessary information to evaluate it properly. 
 
 ```{r, echo = FALSE, fig.cap = "Trade-off between long-term and short-term yield, and the trade-off between biomass being above 0.1 BMSY and the expected variability in the yield. MPs that fail to meet one or both of the risk thresholds for each axis are shown in italics text."}
-Tplot2(MSE1)
+Tplot(MSE1)
 ```
 
 \newpage
