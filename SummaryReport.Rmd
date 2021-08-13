@@ -30,19 +30,17 @@ theme_set(ggpubr::theme_pubclean())
 
 ## Scallops fishery
 
-Two scallop species are fished commercially in the Gulf of St. Lawrence: the Sea Scallop (*Placopecten magellanicus*) and the Iceland Scallop (*Chlamys islandica*) [@stockass]. Fishing is regulated by a fishing season, and or a limited number of fishing days [@stockass]. Every three years, the scallop stock is assessed to evaluate its status, and to verify whether the management plan and conservation approach need to be adjusted to maintain the resource [@stockass]. This assessment is based on landings, fishing effort, catch per unit effort, size structure, weight of muscle landed and density index from scientific surveys [@stockass].
-
-The scallop fishery is data-limited in the Gulf of St. Lawrence, meaning there is not enough data to conduct a conventional stock assessment. This is where the Data-Limited Methods Toolkit (`DLMtool`) comes into play.
+Two scallop species are fished commercially in the Gulf of St. Lawrence: the Sea Scallop (*Placopecten magellanicus*) and the Iceland Scallop (*Chlamys islandica*) [@stockass]. Fishing is regulated by a fishing season, and or a limited number of fishing days [@stockass]. Every three years, the scallop stock is assessed to evaluate its status, and to verify whether the management plan and conservation approach need to be adjusted to maintain the resource [@stockass]. This assessment is based on landings, fishing effort, catch per unit effort, size structure, weight of muscle landed and density index from scientific surveys [@stockass]. 
+  The scallop fishery is data-limited in the Gulf of St. Lawrence, meaning there is not enough data to conduct a conventional stock assessment. This is where the Data-Limited Methods Toolkit (`DLMtool`) comes into play.
 
 ## `DLMtool`
 
-The Data-Limited Methods Toolkit ([`DLMtool`](https://www.datalimitedtoolkit.org/)) is an R package that was conceived to address a widespread problem in fisheries management: conventional stock assessments require a lot of data that is not available for as many as 90% of the world's fish populations [@Costello517]. Using object-oriented programming and parallel computing, `DLMtool` models data-limited fisheries under a variety of management strategies that can easily be compared and visualized according to the available information [@DLMtool]. This allows managers to simulate a variety of management scenarios with an evaluation of uncertainty, of the trade-off between how management procedures benefit catch or population stability, and of the potential need to collect additional data. The result is a powerful simulation and diagnostics tool that synthesizes scenarios of over 114 management procedures to inform management recommendations in a transparent way [@DLMtool]. What began as a collaboration between the University of British Columbia's (UBC) Institute for Oceans and Fisheries and the Natural Resources Defense Council (NRDC) has now been used in over 25 fisheries by Fisheries and Oceans Canada, by the National Marine Fisheries Service in the U.S. Mid-Atlantic and Caribbean regions, and by the California Department of Fish & Wildlife, among others [@DLMtool].
+The Data-Limited Methods Toolkit ([`DLMtool`](https://www.datalimitedtoolkit.org/)) is an R package that was conceived to address a widespread problem in fisheries management: conventional stock assessments require a lot of data that is not available for 90% of the world's fish populations [@Costello517]. Using object-oriented programming and parallel computing, `DLMtool` models data-limited fisheries under a variety of management strategies that can be compared and visualized [@DLMtool]. This allows managers to simulate a variety of management scenarios with an evaluation of uncertainty, of the trade-off between how management procedures benefit catch or population stability, and of the potential need to collect additional data. The result is a powerful simulation and diagnostics tool that synthesizes scenarios of over 114 management procedures to inform management recommendations in a transparent way [@DLMtool]. What began as a collaboration between the University of British Columbia's (UBC) Institute for Oceans and Fisheries and the Natural Resources Defense Council (NRDC) has now been used in over 25 fisheries including Fisheries and Oceans Canada [@DLMtool].
 
-## Objectives
+# Objectives
 
-The internship's main objective is to learn and apply the Data-Limited Methods Toolkit to evaluate scallop stocks. The first objective was to learn the toolkit and describe the main findings in the current report, with the option to a method with high performance to model scallop stocks if time permits. Though time did not permit me to go in much depth with this, I was able to construct some of the objects used in the DLM toolkit workflow to eventually evaluate stocks with greater accuracy and precision. In this report, I will begin by outlining some general trends in scallop catches, length structures, and mortality rates, before describing how I built objects with these datasets using `DLMtool`. All scripts to generate the figures and results shown in this report are accessible here: [github.com/katherinehebert/DFO-scallops](https://github.com/katherinehebert/DFO-scallops).
+The internship's main objective is to learn and apply the Data-Limited Methods Toolkit to evaluate scallop stocks. The first objective was to learn the toolkit and describe the main findings in the current report, with the option to a method with high performance to model scallop stocks if time permits. Though time did not permit me to go in much depth with this, I was able to construct some of the objects used in the DLM toolkit workflow. In this report, I will begin by outlining some general trends in scallop catches, length structures, and mortality rates, before describing how I built objects with these datasets using `DLMtool`. All scripts to generate the figures and results shown in this report are accessible here: [github.com/katherinehebert/DFO-scallops](https://github.com/katherinehebert/DFO-scallops).
 
-------------------------------------------------------------------------
 
 # Exploring trends
 
@@ -50,32 +48,28 @@ Before using `DLMtool`, I first explored the time series in the data provided to
 
 ## Catch
 
-First, I explored the commercial fishery dataset which contained Catches per Unit Effort (CPUE), and data describing the Effort, biomass fished (i.e. Landings), and other information describing each event such as date and location variables. These time series are plotted in Figures 1a and 1b. Though the Survey CPUE time series shows relative stability through time in terms of mean CPUE, there is some variability in the variance in CPUE across sectors, with particularly high variance in the years 2018, 1999, and 1996 (Figure 1a).
+**Historical Trend** First, I explored the commercial fishery data which contained Catches per Unit Effort (CPUE), and data describing the Effort, biomass fished (i.e. Landings), and other information describing each event such as date and location variables. These time series are plotted in Figures 1a and 1b. Though the Survey CPUE time series shows relative stability through time in terms of mean CPUE, there is some variability in the variance in CPUE across sectors, with particularly high variance in the years 2018, 1999, and 1996 (Figure 1a). Then, I fit a simple linear model to each time series to determine an overall trend through time for each measure (Figure 1c and 1d). While CPUE has remained relatively stable since 1987 (Figure 1c), landings have been steadily decreasing at a rate of -29.39 tons per year since 1987 despite a large increase before 1990 (Figure 1d).
 
-Then, I fit a simple linear model to each time series to determine an overall trend through time for each measure (Figure 1c and 1d). While CPUE has remained relatively stable since 1987 (Figure 1c), landings have been steadily decreasing at a rate of -29.39 **tons per year????** since 1987 despite a large increase before 1990 (Figure 1d).
+**Most Recent 5 Years** Though an overview of the whole time series is very helpful to gain an understanding of the broader context of the fishery and how it has been managed, a closer look at recent trends is helpful to evaluate the current status of the fishery (Figure 2). If we focus on the most recent 5 years, we get a slightly different picture of the Survey CPUE and Landings trends shown above. Notably, we can see that an average increase in Survey CPUE in 2018 (Figures 2a and 2c) was followed by a decrease in landings between 2018 and 2019 (Figures 2b and 2d).
 
-![**Overview of landing and Survey CPUE trends over all years and all sectors.** (a) Landings in tonnes over all years available in the dataset, summed across all sectors. (b) Survey Catches per Unit Effort (CPUE), where points indicate the mean CPUE and the error bars show the 95% confidence intervals around the mean. Panels (c) and (d) show linear models fit to the time series plotted in (a) and (b), with model summary information printed in the figure caption.](figures/CPUE_Landings_Historical.png)
+![**Overview of landing and Survey CPUE trends over all years and all sectors.** (a) Landings in tonnes over all years available in the dataset, summed across all sectors. (b) Survey Catches per Unit Effort (CPUE), where points indicate the mean CPUE and the error bars show the 95% confidence intervals around the mean. Panels (c) and (d) show linear models fit to the time series plotted in (a) and (b), with model summary information printed in the figure caption.](figures/CPUE_Landings_Historical.png){width=80%}
 
-Though an overview of the whole time series is very helpful to gain an understanding of the broader context of the fishery and how it has been managed, a closer look at recent trends is helpful to evaluate the current status of the fishery (Figure 2). If we "zoom in" to the most recent 5 years, we get a slightly different picture of the Survey CPUE and Landings trends shown above. Notably, we can see that an average increase in Survey CPUE in 2018 (Figures 2a and 2c) was followed by a decrease in landings between 2018 and 2019 (Figures 2b and 2d).
+![**Landings and Survey CPUE over the 5 most recent years.** (a) Landings in tonnes over all years available in the dataset, summed across all sectors. (b) Survey Catches per Unit Effort (CPUE), where points indicate the mean CPUE and the error bars show the 95% confidence intervals around the mean. Panels (c) and (d) show linear models fit to the time series plotted in (a) and (b), with model summary information printed in the figure caption.](figures/CPUE_Landings_05Recent.png){width=80%}
 
-![**Landings and Survey CPUE over the 5 most recent years.** (a) Landings in tonnes over all years available in the dataset, summed across all sectors. (b) Survey Catches per Unit Effort (CPUE), where points indicate the mean CPUE and the error bars show the 95% confidence intervals around the mean. Panels (c) and (d) show linear models fit to the time series plotted in (a) and (b), with model summary information printed in the figure caption.](figures/CPUE_Landings_05Recent.png)
-
-Both plots and analyses in Figures 1 and 2 were adapted from @refpoint [github.com/MathBoud/DLM.ReferencePoint](https://github.com/MathBoud/DLM.ReferencePoint). The code to reproduce these figures **is in the script \_\_\_\_ in the repo \_\_\_\_\_\_\_\_\_**.
+Both plots and analyses in Figures 1 and 2 were adapted from @refpoint. The code to reproduce these figures is in the script `03_Trends_LandingsCPUE.R` in the [DFO-scallops](https://github.com/katherinehebert/DFO-scallops) repository.
 
 ## Length
 
 Though the overall trend is informative, I also had access to a survey of scallop length frequencies through time, which offer insight into the Gulf population's structure that is not accessible in the overall catch and landings time series explored above. 
 
-  First, I took the weighted mean of scallop length per year, where the weights were the counts of scallops in each length category. As such, the weighted mean represents the mean length of the population for each year, accounting for the abundance of scallops at different lengths.
-
-  To determine the trend in mean length over the time series, I compared a simple linear model of the relationship between mean length and year to two linear mixed models: one with a random effect by sector on the model intercept, and one with a random effect on the slope by sector, to account for differences in the populations between sectors:
+First, I took the weighted mean of scallop length per year, where the weights were the counts of scallops in each length category. As such, the weighted mean represents the mean length of the population for each year, accounting for the abundance of scallops at different lengths. To determine the trend in mean length over the time series, I compared a simple linear model of the relationship between mean length and year to two linear mixed models: one with a random effect by sector on the model intercept, and one with a random effect on the slope by sector, to account for differences in the populations between sectors:
 
 $$m_0 = Length_{mean} \sim {Year}$$
 $$m_1 = Length_{mean} \sim Year + (1 | Sector)$$
 $$m_2 = Length_{mean} \sim (Year | Sector)$$
 
 
-  Though there is some variability in the mean length trend in different sectors (**ref**), the simple linear model was selected as the best option of the three proposed models according to its Akaike Information Criterion (AIC). This model showed an overall decline in the weighted mean length of scallops in the time series, with a slope of -1.1167 (Fig. 3).
+  Though there is some variability in the mean length trend in different sectors, the simple linear model was selected as the best option of the three proposed models according to its Akaike Information Criterion (AIC). This model showed an overall decline in the weighted mean length of scallops in the time series, with a slope of -1.1167 (Fig. 3).
 
 ```{r, echo = FALSE, message=FALSE, warning=FALSE}
 library(dplyr)
@@ -86,21 +80,27 @@ kableExtra::kable(aic) %>%
   kableExtra::kable_styling(full_width = TRUE)
 ```
 
-![**Mean trend through time of the mean density of scallops per length over all surveyed sectors.** *The solid black line is a linear model describing the change in weighted mean length of scallops surrounded by its 95% confidence intervals.*](figures/meanlengths_lm_boxplot.png)
+However, there were still some interesting differences between sectors in the mixed models ($m_1$ and $m_2$). When a random effect was applied to the slope of length through time, sectors varied in the magnitude and direction of the slopes (Fig. 4), where length increased in sectors A, P, O, M, N, E and decreased in all other sectors to varying degrees. 
 
-  However, there were still some interesting differences between sectors in the mixed models ($m_1$ and $m_2$). When a random effect was applied to the slope of length through time, sectors varied in the magnitude and direction of the slopes (Fig. 4), where length increased in sectors A, P, O, M, N, E and decreased in all other sectors to varying degrees. 
+![**Mean trend through time of the mean density of scallops per length over all surveyed sectors.** *The solid black line is a linear model describing the change in weighted mean length of scallops surrounded by its 95% confidence intervals.*](figures/meanlengths_lm_boxplot.png){width=80%}
 
-![**Slope of the mean density of scallops per length over time, in each surveyed sectors.**](figures/meanlengths_lmm_slopespersector.png)
+![**Slope of the mean density of scallops per length over time, in each surveyed sectors.**](figures/meanlengths_lmm_slopespersector.png){width=80%}
 
 Length frequency surveys provide information about the proportion of the scallop population which has attained maturity, which is an indicator of population renewal. Following a script written by @refpoint, I calculated Froese Length Indicators [@froese2004keep], namely to determine what proportion of scallops were at or above maturity length. I then applied a linear model to evaluate the change in this proportion of scallops are maturity length over time, to determine whether the Gulf population structure had changed throughout the time series (Fig. 5). The linear model reveals that the frequency of mature scallops have been declining, though the mean proportion of mature scallops has increased in the last 5 years (Fig. 5).
 
 ![**Mean trend through time of the mean density of scallops at maturity over all surveyed sectors.** *The solid blue line is a linear model describing the change in density of scallops at maturity surrounded by its 95% confidence intervals. The solid black line shows the calculated proportion of scallops at maturity length, on which the linear model was fit.*](figures/Percent_MatureScallops.png)
+
+The code to reproduce these figures is in the scripts `04_FroeseLengthIndicators.R` and `05_Model_timeseries.R` in the  [DFO-scallops](https://github.com/katherinehebert/DFO-scallops) repository.
+
+\newpage
 
 ## Mortality
 
 Mortality rates in the scallop population can also provide valuable insight into the status of the Gulf population. I subset the dataset describing scallop mortality frequencies to the years between 2004 and 2019, because the methodology prior to 2004 yielded less precise measurements of mortality and were therefore not comparable to the 2004-2019 period. Not surprisingly, there generally tend to be more living than dead scallops across all years and all sectors, though the difference between these two categories is variable (Fig. 6).
 
 ![**Frequency of living (VIV) and dead (MOR) scallops annually in each sector**.](figures/mortality_barplot.png)
+
+\newpage
 
 To analyze the trend in mortality rate more generally, I calculated the ratio between living and dead scallops as $ratio = MOR/VIV$ after summing frequencies across all sectors, for each year. This model shows that over the entire time series, this ratio remained stable despite some fluctuations between different years.
 
@@ -110,8 +110,9 @@ This mortality ratio was also calculated for each sector and each year, to asses
 
 ![Annual mortality ratio (MOR/VIV Ratio) in each sector. *Facet labels identify each sector's ID. The solid line is a linear model describing the change in the MOR/VIV ratio of scallops surrounded by its 95% confidence intervals. Black points show the calculated MOR/VIV ratio for each year in each sector.*](figures/mortality_persector.png)
 
+The code to reproduce these figures is in the script `05_Model_timeseries.R` in the [DFO-scallops](https://github.com/katherinehebert/DFO-scallops) repository.
 
-------------------------------------------------------------------------
+\newpage
 
 # `DLMtool` 
 
@@ -189,14 +190,20 @@ Even with such little data, it is possible to apply several Management Procedure
 Can(scallops)
 ```
 
-Then, Total Allowable Catch recommendations can be obtained for each of the evaluated MPs.
+Then, Total Allowable Catch recommendations can be obtained for each of the evaluated MPs:
 
-```{r, message=FALSE, echo = FALSE}
+```{r, message=FALSE, echo = FALSE, results='hide'}
 TACs <- TAC(scallops)  
 boxplot(TACs)
 ```
 
-\newpage
+```{r, message=FALSE, echo = FALSE, fig.show='hide'}
+boxplot(TACs) %>% 
+  kableExtra::kable() %>% 
+  kableExtra::kable_styling(full_width = TRUE)
+```
+
+The AvC (Average Catch) procedure allows the largest Total Allowable Catch (1273.12 kg/hm, SD = 234.54), while all other tested Management Procedures range between 200 and 800 kg/hm.
 
 ## Operating Model
 
@@ -261,35 +268,27 @@ Each element of the Operating Model can be plotted to be inspected further. The 
 
 ### Validating and plotting the MSE
 
-**Is the Operating Model representative of reality?**
+**Is the Operating Model representative of reality?** To test whether the Operating Model is representative of reality, we can simulate the Data object from the OM, and visually inspect the results to see if the true data is discernible from the simulated data. For the Operating Model to be accurate, it should be difficult to discern the true data (in blue) from the simulation data (in black) in Figure 9. In this case, it is not impossible to tell the difference, but the simulations are not far off from the true data (Fig. 9). The Operating Model could be improved with more accurate information in the Stock model object, as well as the Fleet, Observation, and Implementation models.
 
-```{r, echo = FALSE, fig.keep = 'last', fig.cap = "Turing plot comparing the Operating Model to the Scallop Data object. The true catch time series is shown in blue, and the simulations from the OM are shown in black.", results='hide', message=FALSE, warning = FALSE}
-Turing(OM1, scallops, wait=FALSE)
-```
-
-For the Operating Model to be accurate, it should be difficult to discern the true data (in blue) from the simulation data (in black). In this case, it is not impossible to tell the difference, but the simulations are not far off from the true data. The Operating Model could be improved with more accurate information in the Stock model object, as well as the Fleet, Observation, and Implementation models.
-
-**Has the MSE converged?** 
-
-The MSE was generated with enough simulations, and the convergence is stable:
+**Has the MSE converged?** The MSE was generated with enough simulations, and the convergence is stable for all considered Management Procedures:
 
 ```{r, echo = FALSE, fig.show='hide', message = FALSE}
 Converge(MSE1)
 ```
 
-**How do the MPs trade-off yield and biomass?**
+```{r, echo = FALSE, fig.keep = 'last', fig.cap = "Turing plot comparing the Operating Model to the Scallop Data object. The true catch time series is shown in blue, and the simulations from the OM are shown in black.", results='hide', message=FALSE, warning = FALSE}
+Turing(OM1, scallops, wait=FALSE)
+```
+
+\newpage
+
+**How do the MPs trade-off yield and biomass?** The trade-off plot is accompanied by a table showing the performance of each Management Procedure according to 5 performance metrics. There is also a column which designates whether the Management Procedure is Satisificed, i.e., if it meets the minimum performance criteria for all performance metrics. In this case, none of them are Satisificed, likely because the Operating Model has not been constructed with some necessary information to evaluate it properly. 
 
 ```{r, echo = FALSE, fig.cap = "Trade-off between long-term and short-term yield, and the trade-off between biomass being above 0.1 BMSY and the expected variability in the yield. MPs that fail to meet one or both of the risk thresholds for each axis are shown in italics text."}
 Tplot2(MSE1)
 ```
 
-The trade-off plot is accompanied by a table showing the performance of each Management Procedure according to 5 performance metrics. There is also a column which designates whether the Management Procedure is Satisificed, i.e., if it meets the minimum performance criteria for all performance metrics. In this case, none of them are Satisificed, likely because the Operating Model has not been constructed with some necessary information to evaluate it properly. 
-
-
-**What is the likelihood of meeting biomass targets in coming years?**
-
-![Likelihood of meeting biomass targets in future years for each Management Procedure.](figures/wormplot.pdf)
-
+\newpage
 
 **If we project the model into future years, what would it look like for each MP?**
 
@@ -297,9 +296,17 @@ The trade-off plot is accompanied by a table showing the performance of each Man
 
 \newpage
 
+**How do these MP projections compare to current conditions?**
+
+![Comparison of median biomass and yield in first year and last 5 years of projection for each MP.](figures/comparison_plot.pdf)
+
+\newpage
+
 # Summary
 
 Though the scallop fishery is data-limited, `DLMtool` makes it possible to quickly build models and simulations that allow different management procedures to be tested and compared, even when someone is not as familiar with the study system or the package (as I was during this internship). Just as importantly, the package clarifies which information is needed and should be found or included to improve these models, leading to a more effective way of managing the stock.
+
+The code to reproduce the DLMtool workflow is in the script `06_DLMtool.R` in the [DFO-scallops](https://github.com/katherinehebert/DFO-scallops) repository.
 
 # Thank you!
 
